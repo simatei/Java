@@ -2,48 +2,47 @@ package Sorts;
 
 import static Sorts.SortUtils.*;
 
-
-/**
- * @author dpunosevac
- * @author Podshivalov Nikita (https://github.com/nikitap492)
- * @see SortAlgorithm
- */
 public class ShellSort implements SortAlgorithm {
 
-    /**
-     * This method implements Generic Shell Sort.
-     *
-     * @param array The array to be sorted
-     */
-    @Override
-    public <T extends Comparable<T>> T[] sort(T[] array) {
-        int N = array.length;
-        int h = 1;
+  /**
+   * Implements generic shell sort.
+   *
+   * @param array the array to be sorted.
+   * @param <T> the type of elements in the array.
+   * @return the sorted array.
+   */
+  @Override
+  public <T extends Comparable<T>> T[] sort(T[] array) {
+    int length = array.length;
+    int gap = 1;
 
-        while (h < N / 3) {
-            h = 3 * h + 1;
-        }
-
-        while (h >= 1) {
-            for (int i = h; i < N; i++) {
-                for (int j = i; j >= h && less(array[j], array[j - h]); j -= h) {
-                    swap(array, j, j - h);
-                }
-            }
-
-            h /= 3;
-        }
-
-        return array;
+    /* Calculate gap for optimization purpose */
+    while (gap < length / 3) {
+      gap = 3 * gap + 1;
     }
 
-    public static void main(String[] args) {
-        Integer[] toSort = {4, 23, 6, 78, 1, 54, 231, 9, 12};
-
-        ShellSort sort = new ShellSort();
-        Integer[] sorted = sort.sort(toSort);
-
-        print(sorted);
-
+    for (; gap > 0; gap /= 3) {
+      for (int i = gap; i < length; i++) {
+        int j;
+        T temp = array[i];
+        for (j = i; j >= gap && less(temp, array[j - gap]); j -= gap) {
+          array[j] = array[j - gap];
+        }
+        array[j] = temp;
+      }
     }
+    return array;
+  }
+
+  /* Driver Code */
+  public static void main(String[] args) {
+    Integer[] toSort = {4, 23, 6, 78, 1, 54, 231, 9, 12};
+
+    ShellSort sort = new ShellSort();
+    sort.sort(toSort);
+    for (int i = 0; i < toSort.length - 1; ++i) {
+      assert toSort[i] <= toSort[i + 1];
+    }
+    print(toSort);
+  }
 }
